@@ -9,6 +9,11 @@ app.use(express.json());
 //route import
 app.use('/user', require('./routes/userRoute'))
 
+
+app.get('/',(req, res)=>{
+    res.send('working...............')
+})
+
 const port = process.env.PORT || 4000;
 
 
