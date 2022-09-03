@@ -1,0 +1,43 @@
+[
+  {
+    "id": "1",
+    "name": "Leanne Graham",
+    "address": "village, home district",
+    "contact": "010-692-6593-56952",
+    "gender": "male",
+    "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png"
+  },
+  {
+    "id": "2",
+    "name": "Ervin Howell",
+    "address": "village, home district",
+    "contact": "010-692-6593 x09125",
+    "gender": "female",
+    "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdPuCovwlEDU1DMy_NbYedAXmEMaZaG0o4g&usqp=CAU"
+  },
+  {
+    "id": "3",
+    "name": "Clementine Bauch",
+    "address": "village, home district",
+    "contact": "1-463-123-4447",
+    "gender": "male",
+    "photo": "https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png"
+  },
+  {
+    "id": "4",
+    "name": "Patricia Lebsack",
+    "address": "village, home district",
+    "contact": "493-170-9623 x156",
+    "gender": "third gender",
+    "photo": "https://thumbs.dreamstime.com/b/third-gender-sex-concept-made-male-female-silhouette-121039423.jpg"
+  },
+  {
+    "id": "5",
+    "name": "Chelsey Dietrich",
+    "address": "village, home district",
+    "contact": "(254)954-1289",
+    "gender": "male",
+    "photo": "https://png.pngtree.com/png-vector/20190501/ourmid/pngtree-users-icon-design-png-image_1014936.jpg"
+  },
+  { "id": "6", "contact": "123" }
+]
