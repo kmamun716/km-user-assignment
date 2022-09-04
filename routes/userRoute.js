@@ -1,16 +1,26 @@
 const router = require('express').Router();
-const userData = require('../data.json');
+const { json } = require('express');
 const fs = require('fs');
+
+//common function
+function getAllUser(){
+    const users = fs.readFileSync('./data.json')
+    return JSON.parse(users);
+}
+
+const users = getAllUser();
+
 
 //get all user
 router.get('/all', (req, res)=>{
-    res.status(200).send(userData)
+    res.status(200).send(users)
 })
 
 //get user by id
-router.get('/:id',(req, res)=>{
+router.get('single/:id',(req, res)=>{
     const id = req.params.id;
-    const user = userData.find(user=>user.id === id);
+    console.log(id)
+    const user = users.find(user=>user.id === id);
     if(user){
         res.status(200).send(user);
     }else{
@@ -20,8 +30,8 @@ router.get('/:id',(req, res)=>{
 
 //get random user
 router.get("/random", (req, res)=>{
-    const randomId = Math.round(Math.random()*(userData.length-1) + 1);
-    const randomUser = userData.find(user=>parseInt(user.id) === randomId);
+    const randomId = Math.round(Math.random()*(users.length-1) + 1);
+    const randomUser = users.find(user=>parseInt(user.id) === randomId);
     res.status(200).send(randomUser);
 })
 
@@ -29,24 +39,28 @@ router.get("/random", (req, res)=>{
 router.post('/',(req, res)=>{
     const newUser = req.body;
     const newUserId = parseInt(Math.floor(newUser.id));
-    const existingUser = userData.find(user=>parseInt(user.id) === newUserId);
-    if(existingUser){
-        res.status(401).json({message: `user id already registered please input more then ${userData.length} as id`})
-    }
-    if(newUserId !== userData.length+1){
-        res.json({message: `new user id is must be ${userData.length+1}`})
+    const existingUser = users.find(user=>parseInt(user.id) === newUserId);
+    const {id, name, address, gender, contact, photo} = newUser;
+    if(id && name && address && gender && contact && photo){
+        if(existingUser){
+            res.status(401).json({message: `user id already registered please input more then ${users.length} as id`})
+        }
+        if(newUserId !== users.length+1){
+            res.json({message: `new user id is must be ${users.length+1}`})
+        }else{
+            users.push({id, name, address, contact, gender, photo});
+            fs.writeFileSync('./data.json', JSON.stringify(users), 'utf-8');
+            res.status(200).json({message: 'user registered successfully'})
+        }
     }else{
-        userData[newUserId] = newUser;
-        console.log(userData)
-        fs.writeFileSync('./data.json', JSON.stringify(userData));
-        res.status(200).json({message: 'user registered successfully', user: userData[newUserId]})
+        res.status(400).json({message: `user object must be need id, name, address, gender, contact, photo`})
     }
 })
 
 //update an user
 router.put('/update',(req, res)=>{
     const {id, contact} = req.body;
-    const existingUser = userData.find(user=>parseInt(user.id) === parseInt(Math.floor(id)));
+    const existingUser = users.find(user=>parseInt(user.id) === parseInt(Math.floor(id)));
     fs.readFile('./data.json', null, (err, data)=>{
         if(!err){
             existingUser.contact = contact;
@@ -60,15 +74,20 @@ router.put('/update',(req, res)=>{
 //delete user
 router.delete('/delete',(req, res)=>{
     const {id} = req.body;
-    const existingUser = userData.find(user=>parseInt(user.id) === parseInt(Math.floor(id)));
-    fs.readFile('./data.json', null, (err, data)=>{
-        if(!err){
-            delete userData[id]
-            res.send(`user with id ${existingUser.id} has been deleted`);
-        }else{
-            res.json({error: err.message});
-        }
-    }, true);
+    const existingUser = users.find(user=>parseInt(user.id) === parseInt(Math.floor(id)));
+    if(existingUser){
+        fs.readFile('./data.json', null, (err, data)=>{
+            if(!err){
+                const currentUsers = users.filter(user=> parseInt(user.id) !== parseInt(Math.floor(id)));
+                fs.writeFileSync('./data.json', JSON.stringify(currentUsers), 'utf-8')
+                res.send(`user with id ${existingUser.id} has been deleted`);
+            }else{
+                res.json({error: err.message});
+            }
+        }, true);
+    }else{
+        res.status(401).json({message: 'user not found'})
+    }
 })
 
 module.exports = router;
